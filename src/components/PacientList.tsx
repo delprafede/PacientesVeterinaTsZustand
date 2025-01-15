@@ -12,7 +12,7 @@ const PacientList = () => {
             Listado de Pacientes
           </h2>
           <p className=" text-xl mt-5 mb-10 text-center ">
-            Adminidtra tus{" "}
+            Administra tus{" "}
             <span className=" text-indigo-700">Pacientes y Citas</span>
           </p>
          
@@ -29,7 +29,7 @@ const PacientList = () => {
           <h2 className=" text-2xl font-bold text-center mb-3">
             No hay Pacientes
           </h2>
-          <p>
+          <p className="text-xl mt-5 mb-10 text-center">
             Comienza Agregando Pacientes{" "}
             <span className=" text-indigo-700">
               {" "}

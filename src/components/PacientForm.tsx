@@ -1,17 +1,40 @@
 import { useForm } from "react-hook-form";
 import Errors from "./Errors";
-import {  DraftPatient } from "../types/indes";
+import { DraftPatient } from "../types/indes";
 import { usePatienteStore } from "../store/store";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const PacientFrom = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
+    setValue,
   } = useForm<DraftPatient>();
-  const { addPatient } = usePatienteStore();
-  const onSubmit = (data : DraftPatient) => {
-    addPatient(data)
+  const { addPatient, activePatient, patients, updatePatient } =
+    usePatienteStore();
+
+  useEffect(() => {
+    if (activePatient) {
+      const pacientActive = patients.filter((p) => p.id === activePatient)[0];
+      setValue("name", pacientActive.name);
+      setValue("owner", pacientActive.owner);
+      setValue("email", pacientActive.email);
+      setValue("date", pacientActive.date);
+      setValue("symptoms", pacientActive.symptoms);
+    }
+  }, [activePatient]);
+
+  const onSubmit = (data: DraftPatient) => {
+    if (activePatient) {
+      updatePatient(data);
+    } else {
+      addPatient(data);
+      toast.success("Paciente agregado con exito")
+    }
+    reset();
   };
   return (
     <div className=" flex flex-col items-center">
@@ -41,9 +64,7 @@ const PacientFrom = () => {
               minLength: { value: 4, message: "Minimo 4 caracteres" },
             })}
           />
-          {errors.name && (
-            <Errors>{errors.name?.message}</Errors>
-          )}
+          {errors.name && <Errors>{errors.name?.message}</Errors>}
         </div>
         <div>
           <label className=" font-bold uppercase" htmlFor="propietario">
@@ -90,7 +111,6 @@ const PacientFrom = () => {
             type="date"
             id="date"
             {...register("date", {
-              valueAsDate: true,
               required: "La fecha es obligatoria",
             })}
           />
@@ -110,13 +130,11 @@ const PacientFrom = () => {
               minLength: { value: 4, message: "Minimo 4 caracteres" },
             })}
           ></textarea>
-          {errors.symptoms && (
-            <Errors>{errors.symptoms?.message}</Errors>
-          )}
+          {errors.symptoms && <Errors>{errors.symptoms?.message}</Errors>}
         </div>
         <div>
           <input
-            className=" uppercase font-bold text-white py-3 w-full bg-indigo-800 rounded-lg"
+            className=" uppercase font-bold text-white py-3 w-full bg-indigo-800 rounded-lg cursor-pointer"
             type="submit"
             value={"Guardar Paciente"}
           />
