@@ -30,6 +30,8 @@ const PacientFrom = () => {
   const onSubmit = (data: DraftPatient) => {
     if (activePatient) {
       updatePatient(data);
+      toast.success("Paciente actualizado con exito")
+
     } else {
       addPatient(data);
       toast.success("Paciente agregado con exito")
